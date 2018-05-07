@@ -1,0 +1,7 @@
+# depslib dependency file v1.0
+1524844975 source:f:\我的项目\haffman\haffman\main.cpp
+	<iostream>
+	<fstream>
+	<queue>
+	<algorithm>
+

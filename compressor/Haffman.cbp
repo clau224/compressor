@@ -31,6 +31,8 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="compress.cpp" />
+		<Unit filename="compress.h" />
 		<Unit filename="global.h" />
 		<Unit filename="hfmnode.h" />
 		<Unit filename="main.cpp" />

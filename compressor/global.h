@@ -4,8 +4,9 @@
 #include<queue>
 #include"hfmnode.h"
 
-//记录输入输出路径
+//记录输入路径
 char PATH_IN[255];
+//记录输出路径
 char PATH_OUT_1[255];
 char PATH_OUT_2[255];
 //记录每个字符出现的顺序

@@ -28,6 +28,5 @@ int main()
         ans=getch();
         system("cls");
     }
-
     return 0;
 }

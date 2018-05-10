@@ -95,6 +95,7 @@ void savePSW(){
 
 void saveNOTE()
 {
+
     ifstream ToCompress(PATH_IN,ios::binary|ios::in);
     ofstream HasCompress(PATH_OUT_1, ios::binary|ios::out);
 

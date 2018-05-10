@@ -16,6 +16,7 @@ public:
         lchild=NULL;
         rchild=NULL;
     }
+
     friend bool operator < (HFMNode A, HFMNode B)
     {
         return A.num > B.num;

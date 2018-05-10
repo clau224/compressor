@@ -17,12 +17,12 @@
 	<queue>
 	"hfmnode.h"
 
-1525704922 f:\我的项目\haffman\compressor\hfmnode.h
+1525967425 f:\我的项目\haffman\compressor\hfmnode.h
 
-1525964475 f:\我的项目\haffman\compressor\compress.h
+1525967285 f:\我的项目\haffman\compressor\compress.h
 	"hfmnode.h"
 
-1525964988 source:f:\我的项目\haffman\compressor\main.cpp
+1525967285 source:f:\我的项目\haffman\compressor\main.cpp
 	<iostream>
 	<fstream>
 	<conio.h>

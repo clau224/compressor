@@ -9,18 +9,24 @@ using namespace std;
 
 int main()
 {
-    cout<<"¹þ·òÂüÑ¹Ëõ½âÑ¹Ëõ³ÌÐò!\n1£ºÑ¹Ëõ \n2£º½âÑ¹Ëõ \n0£ºÍË³ö"<<endl;
-    char ans=getch();
-    switch(ans){
-        case '1':
+    while(true)
+    {
+        cout<<"¹þ·òÂüÑ¹Ëõ½âÑ¹Ëõ³ÌÐò!\n1£ºÑ¹Ëõ \n2£º½âÑ¹Ëõ \n0£ºÍË³ö"<<endl;
+        char ans=getch();
+        if(ans=='1'){
             GetPath();
-    //getHFMCode(new HFMNode(HFMQueue.top()), "");
             Compress();
+            Init();
+        }
+        else if(ans=='2');
+
+        else if(ans=='0')
             break;
-        case '2':
-            break;
-        default:
-            break;
+        else
+            cout<<"ÎÞ·¨Ê¶±ðµÄÊäÈë£¡"<<endl;
+        cout<<"°´ÈÎÒâ¼ü¼ÌÐø..."<<endl;
+        ans=getch();
+        system("cls");
     }
     return 0;
 }

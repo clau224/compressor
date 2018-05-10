@@ -16,13 +16,16 @@ void GetPath()
 void SetljwPath()
 {
     strcpy(PATH_OUT_1, PATH_IN);
-    strcat(strrchr(PATH_OUT_1,'.'), ".ljw");
+    strcpy(strrchr(PATH_OUT_1,'.'), ".ljw");
+    cout<<PATH_OUT_1<<endl;
 }
+
 
 void SetljwrcdPath()
 {
     strcpy(PATH_OUT_2, PATH_IN);
-    strcat(strrchr(PATH_OUT_2,'.'), ".ljwrcd");
+    strcpy(strrchr(PATH_OUT_2,'.'), ".ljwrcd");
+    cout<<PATH_OUT_2<<endl;
 }
 
 //计数各个字符出现次数
@@ -46,9 +49,11 @@ void CreateTree()
 {
     for(int i=0; i<256; i++)
     {
-        HFMNode temp(i, NUMCH[i]);
         if(NUMCH[i]!=0)
+        {
+            HFMNode temp(i, NUMCH[i]);
             HFMQueue.push(temp);
+        }
     }
     while(HFMQueue.size()>1)
     {
@@ -69,7 +74,6 @@ void getHFMCode(HFMNode* root, string HFMCode)
 {
     if(root->lchild==NULL && root->rchild==NULL)
     {
-        cout<<(char)root->ascii<<":"<<HFMCode<<endl;
         HFMcode[root->ascii]=HFMCode;
         return;
     }
@@ -80,17 +84,26 @@ void getHFMCode(HFMNode* root, string HFMCode)
     }
 }
 
-void cmprs()
-{
-    ifstream ToCompress(PATH_IN,ios::in|ios::binary);
-    ofstream HasCompress(PATH_OUT_1, ios::binary|ios::out);
+
+void savePSW(){
     ofstream PSWCompress(PATH_OUT_2, ios::binary|ios::out);
+    PSWCompress.write((char *)&FILELENGTH,sizeof(long));
+    for(int i=0;i<=FILELENGTH;i++)
+        PSWCompress.write((char *)&NUMCH[i],sizeof(int));
+    PSWCompress.close();
+}
+
+void saveNOTE()
+{
+    ifstream ToCompress(PATH_IN,ios::binary|ios::in);
+    ofstream HasCompress(PATH_OUT_1, ios::binary|ios::out);
+
     char ch=ToCompress.get();
     while(ch!=EOF)
     {
         int index=0;
         int length=HFMcode[ch].length();
-        for(int i=0;i<length;i++)
+        for(int i=0; i<length; i++)
         {
 
         }
@@ -100,6 +113,7 @@ void cmprs()
     HasCompress.close();
 }
 
+
 void Compress()
 {
     SetljwPath();
@@ -107,4 +121,21 @@ void Compress()
     CountNum();
     CreateTree();
     getHFMCode(new HFMNode(HFMQueue.top()), "");
+    savePSW();
+}
+
+
+void Init()
+{
+    for(int i=0; i<255; i++)
+    {
+        PATH_IN[i]='0';
+        PATH_OUT_1[i]='0';
+        PATH_OUT_2[i]='0';
+        NUMCH[i]=0;
+        HFMcode[i]="";
+    }
+    FILELENGTH=0;
+    while(!HFMQueue.empty())
+        HFMQueue.pop();
 }

@@ -4,13 +4,14 @@
 class HFMNode
 {
 public:
-    int ascii;
+    char ascii;
     int num;
     HFMNode* lchild;
     HFMNode* rchild;
 
-    HFMNode(){};
-    HFMNode(int a, int b){
+    HFMNode() {};
+    HFMNode(char a, int b)
+    {
         ascii=a;
         num=b;
         lchild=NULL;

@@ -2,7 +2,6 @@
 #include<fstream>
 #include<conio.h>
 #include"global.h"
-#include"hfmnode.h"
 #include<string.h>
 
 using namespace std;
@@ -13,45 +12,30 @@ void GetPath()
     cin>>PATH_IN;
 }
 
-void SetljwPath()
-{
-    strcpy(PATH_OUT_1, PATH_IN);
-    strcpy(strrchr(PATH_OUT_1,'.'), ".ljw");
-    cout<<PATH_OUT_1<<endl;
-}
-
-
-void SetljwrcdPath()
-{
-    strcpy(PATH_OUT_2, PATH_IN);
-    strcpy(strrchr(PATH_OUT_2,'.'), ".ljwrcd");
-    cout<<PATH_OUT_2<<endl;
-}
-
 //计数各个字符出现次数
 void CountNum()
 {
-    ifstream ToCompress(PATH_IN,ios::in);
-    int ch;
+    ifstream ToCompress(PATH_IN,ios::binary|ios::in);
+    char ch;
     FILELENGTH=0;
     ch=ToCompress.get();
     while(ch!=EOF)
     {
         FILELENGTH++;
-        NUMCH[ch]++;
+        NUMCH[ch+128]++;
         ch=ToCompress.get();
     }
     ToCompress.close();
 }
 
-
+//创建哈夫曼树
 void CreateTree()
 {
     for(int i=0; i<256; i++)
     {
         if(NUMCH[i]!=0)
         {
-            HFMNode temp(i, NUMCH[i]);
+            HFMNode temp(i-128, NUMCH[i]);
             HFMQueue.push(temp);
         }
     }
@@ -74,7 +58,8 @@ void getHFMCode(HFMNode* root, string HFMCode)
 {
     if(root->lchild==NULL && root->rchild==NULL)
     {
-        HFMcode[root->ascii]=HFMCode;
+        HFMcode[root->ascii+128]=HFMCode;
+        cout<<(int)root->ascii<<" "<<HFMCode<<endl;
         return;
     }
     else if(root->lchild &&root->rchild)
@@ -84,55 +69,183 @@ void getHFMCode(HFMNode* root, string HFMCode)
     }
 }
 
+/*
+char getASCII(int choose)
+{
+    static HFMNode record=HFMQueue.top();
+    if(choose==0){
+        record=*record.lchild;
+    }
+    else{
+        record=*record.rchild;
+    }
+    if(record.lchild==NULL && record.rchild==NULL){
+        char ans=record.ascii;
+        record=HFMQueue.top();
+        return ans;
+    }
+    return -1;
+}
+*/
 
-void savePSW(){
-    ofstream PSWCompress(PATH_OUT_2, ios::binary|ios::out);
-    PSWCompress.write((char *)&FILELENGTH,sizeof(long));
-    for(int i=0;i<=FILELENGTH;i++)
+//保存密码本
+void savePSW()
+{
+    strcpy(PATH_OUT, PATH_IN);
+    strcpy(strrchr(PATH_OUT,'.'), ".ljwrcd");
+
+    ofstream PSWCompress(PATH_OUT, ios::binary|ios::out);
+
+    PSWCompress.write((char *)&FILELENGTH,sizeof(long long int));
+    cout<<"FILELENGTH="<<FILELENGTH<<endl;
+    for(int i=0; i<256; i++)
         PSWCompress.write((char *)&NUMCH[i],sizeof(int));
     PSWCompress.close();
 }
 
+//读取密码本
+void readPSW()
+{
+    strcpy(strrchr(PATH_IN,'.'), ".ljwrcd");
+
+    ifstream PSWDeCompress(PATH_IN, ios::binary|ios::in);
+
+    PSWDeCompress.read((char*)&FILELENGTH,sizeof(long long int));
+    cout<<"FILELENGTH="<<FILELENGTH<<endl;
+    for(int i=0; i<256; i++)
+        PSWDeCompress.read((char *)&NUMCH[i],sizeof(int));
+    PSWDeCompress.close();
+}
+
+//保存被压缩文件
 void saveNOTE()
 {
+    strcpy(PATH_OUT, PATH_IN);
+    strcpy(strrchr(PATH_OUT,'.'), ".ljw");
 
-    ifstream ToCompress(PATH_IN,ios::binary|ios::in);
-    ofstream HasCompress(PATH_OUT_1, ios::binary|ios::out);
+    ifstream ToCompress(PATH_IN, ios::binary|ios::in);
+    ofstream HasCompress(PATH_OUT, ios::binary|ios::out);
 
     char ch=ToCompress.get();
+    int index=0;
+    char ans_temp;
     while(ch!=EOF)
     {
-        int index=0;
-        int length=HFMcode[ch].length();
+        //cout<<ch<<endl;
+        int length=HFMcode[ch+128].length();
         for(int i=0; i<length; i++)
         {
-
+            if(HFMcode[ch+128][i]=='1')
+                ans_temp=ans_temp|BIT[index];
+            index++;
+            if(index==8)
+            {
+                //cout<<ans_temp<<"----"<<endl;
+                HasCompress.write((char*)&ans_temp,sizeof(char));
+                index=0;
+                ans_temp=0;
+            }
         }
         ch=ToCompress.get();
     }
+    if(index>0)
+        HasCompress.write(&ans_temp,sizeof(char));
     ToCompress.close();
     HasCompress.close();
 }
 
+//读取被压缩文件
+void readNOTE()
+{
+    strcpy(strrchr(PATH_IN, '.'), ".ljw");
+    strcpy(PATH_OUT, PATH_IN);
+    strcpy(strrchr(PATH_OUT, '.'), ".txt");
 
+    ifstream ToDeCompress(PATH_IN, ios::binary|ios::in);
+    ofstream HasDeCompress(PATH_OUT, ios::binary|ios::out);
+
+    char ch=0;
+    ToDeCompress.read((char*)&ch, sizeof(char));
+    int index=0;
+    while(FILELENGTH--)
+    {
+        HFMNode record=HFMQueue.top();
+        while(true)
+        {
+            if(record.lchild==NULL && record.rchild==NULL)
+            {
+                HasDeCompress.write((char*)&record.ascii, sizeof(char));
+                record=HFMQueue.top();
+                break;
+            }
+            if(ch&BIT[index])
+            {
+                record=*record.rchild;
+            }
+            else
+            {
+                record=*record.lchild;
+            }
+            index++;
+            if(index==8)
+            {
+                ToDeCompress.read((char*)&ch, sizeof(char));
+                index=0;
+            }
+        }
+    }
+
+    ToDeCompress.close();
+    HasDeCompress.close();
+}
+
+//压缩过程
 void Compress()
 {
-    SetljwPath();
-    SetljwrcdPath();
+    GetPath();
     CountNum();
     CreateTree();
     getHFMCode(new HFMNode(HFMQueue.top()), "");
     savePSW();
+    saveNOTE();
 }
 
+//解压缩过程
+void DeCompress()
+{
+    GetPath();
+    readPSW();
+    CreateTree();
+    getHFMCode(new HFMNode(HFMQueue.top()), "");
+    readNOTE();
+}
+
+/*
+void Look()
+{
+    char Path[256];
+    cout<<"请输入测试路径"<<endl;
+    cin>>Path;
+    ifstream check(Path, ios::in);
+    char temp=0;
+    check.read((char*)&temp, sizeof(char));
+    int COUNT=30;
+    while(COUNT--)
+    {
+        cout<<(int)temp<<endl;
+        check.read((char*)&temp, sizeof(char));
+    }
+    check.close();
+}
+*/
 
 void Init()
 {
-    for(int i=0; i<255; i++)
+    for(int i=0; i<256; i++)
     {
         PATH_IN[i]='0';
-        PATH_OUT_1[i]='0';
-        PATH_OUT_2[i]='0';
+        PATH_OUT[i]='0';
+        PATH_OUT[i]='0';
         NUMCH[i]=0;
         HFMcode[i]="";
     }

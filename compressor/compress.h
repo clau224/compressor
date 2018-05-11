@@ -11,6 +11,8 @@ void CreateTree();
 void getHFMCode(HFMNode* root, std::string HFMCode);
 void cmprs();
 void Compress();
+void DeCompress();
 void Init();
+void Look();
 
 #endif // COMPRESS_H_INCLUDED

@@ -5,7 +5,7 @@
 	<queue>
 	<algorithm>
 
-1525964692 source:f:\我的项目\haffman\compressor\compress.cpp
+1526039610 source:f:\我的项目\haffman\compressor\compress.cpp
 	<iostream>
 	<fstream>
 	<conio.h>
@@ -13,16 +13,16 @@
 	"hfmnode.h"
 	<string.h>
 
-1525964475 f:\我的项目\haffman\compressor\global.h
+1526039579 f:\我的项目\haffman\compressor\global.h
 	<queue>
 	"hfmnode.h"
 
-1525967425 f:\我的项目\haffman\compressor\hfmnode.h
+1526039579 f:\我的项目\haffman\compressor\hfmnode.h
 
-1525967285 f:\我的项目\haffman\compressor\compress.h
+1526015603 f:\我的项目\haffman\compressor\compress.h
 	"hfmnode.h"
 
-1525967285 source:f:\我的项目\haffman\compressor\main.cpp
+1526039579 source:f:\我的项目\haffman\compressor\main.cpp
 	<iostream>
 	<fstream>
 	<conio.h>

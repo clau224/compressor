@@ -8,6 +8,8 @@
 char PATH_IN[256];
 //记录输出路径
 char PATH_OUT[256];
+//记录文件尾缀
+char suffix[10];
 //记录每个字符出现的顺序
 int NUMCH[256];
 //记录哈夫曼编码

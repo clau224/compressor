@@ -30,3 +30,27 @@
 	"hfmnode.h"
 	"compress.h"
 
+1526953819 source:f:\我的项目\compressor-master\compressor\compress.cpp
+	<iostream>
+	<fstream>
+	<conio.h>
+	"global.h"
+	<string.h>
+
+1526953819 f:\我的项目\compressor-master\compressor\global.h
+	<queue>
+	"hfmnode.h"
+
+1526952374 f:\我的项目\compressor-master\compressor\hfmnode.h
+
+1525994760 source:f:\我的项目\compressor-master\compressor\main.cpp
+	<iostream>
+	<fstream>
+	<conio.h>
+	<algorithm>
+	"hfmnode.h"
+	"compress.h"
+
+1525994760 f:\我的项目\compressor-master\compressor\compress.h
+	"hfmnode.h"
+

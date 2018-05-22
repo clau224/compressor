@@ -15,11 +15,11 @@ void GetPath()
 //计数各个字符出现次数
 void CountNum()
 {
-    ifstream ToCompress(PATH_IN,ios::binary|ios::in);
+    ifstream ToCompress(PATH_IN, ios::binary);
     char ch;
     FILELENGTH=0;
     ch=ToCompress.get();
-    while(ch!=EOF)
+    while(!ToCompress.eof())
     {
         FILELENGTH++;
         NUMCH[ch+128]++;
@@ -59,7 +59,6 @@ void getHFMCode(HFMNode* root, string HFMCode)
     if(root->lchild==NULL && root->rchild==NULL)
     {
         HFMcode[root->ascii+128]=HFMCode;
-        cout<<(int)root->ascii<<" "<<HFMCode<<endl;
         return;
     }
     else if(root->lchild &&root->rchild)
@@ -94,10 +93,10 @@ void savePSW()
     strcpy(PATH_OUT, PATH_IN);
     strcpy(strrchr(PATH_OUT,'.'), ".ljwrcd");
 
-    ofstream PSWCompress(PATH_OUT, ios::binary|ios::out);
+    ofstream PSWCompress(PATH_OUT, ios::binary);
 
+    PSWCompress.write(strrchr(PATH_IN,'.'),sizeof(char)*10);
     PSWCompress.write((char *)&FILELENGTH,sizeof(long long int));
-    cout<<"FILELENGTH="<<FILELENGTH<<endl;
     for(int i=0; i<256; i++)
         PSWCompress.write((char *)&NUMCH[i],sizeof(int));
     PSWCompress.close();
@@ -108,10 +107,10 @@ void readPSW()
 {
     strcpy(strrchr(PATH_IN,'.'), ".ljwrcd");
 
-    ifstream PSWDeCompress(PATH_IN, ios::binary|ios::in);
+    ifstream PSWDeCompress(PATH_IN, ios::binary);
 
+    PSWDeCompress.read((char*)suffix, sizeof(char)*10);
     PSWDeCompress.read((char*)&FILELENGTH,sizeof(long long int));
-    cout<<"FILELENGTH="<<FILELENGTH<<endl;
     for(int i=0; i<256; i++)
         PSWDeCompress.read((char *)&NUMCH[i],sizeof(int));
     PSWDeCompress.close();
@@ -123,13 +122,13 @@ void saveNOTE()
     strcpy(PATH_OUT, PATH_IN);
     strcpy(strrchr(PATH_OUT,'.'), ".ljw");
 
-    ifstream ToCompress(PATH_IN, ios::binary|ios::in);
-    ofstream HasCompress(PATH_OUT, ios::binary|ios::out);
+    ifstream ToCompress(PATH_IN, ios::binary);
+    ofstream HasCompress(PATH_OUT, ios::binary);
 
     char ch=ToCompress.get();
     int index=0;
     char ans_temp;
-    while(ch!=EOF)
+    while(!ToCompress.eof())
     {
         //cout<<ch<<endl;
         int length=HFMcode[ch+128].length();
@@ -159,10 +158,10 @@ void readNOTE()
 {
     strcpy(strrchr(PATH_IN, '.'), ".ljw");
     strcpy(PATH_OUT, PATH_IN);
-    strcpy(strrchr(PATH_OUT, '.'), ".txt");
+    strcpy(strrchr(PATH_OUT, '.'), suffix);
 
-    ifstream ToDeCompress(PATH_IN, ios::binary|ios::in);
-    ofstream HasDeCompress(PATH_OUT, ios::binary|ios::out);
+    ifstream ToDeCompress(PATH_IN, ios::binary);
+    ofstream HasDeCompress(PATH_OUT, ios::binary);
 
     char ch=0;
     ToDeCompress.read((char*)&ch, sizeof(char));
